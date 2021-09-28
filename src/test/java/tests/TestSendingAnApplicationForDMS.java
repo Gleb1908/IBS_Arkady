@@ -2,7 +2,10 @@ package tests;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TestSendingAnApplicationForDMS extends BaseTest {
 
@@ -40,7 +43,17 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
 //            webDriver.switchTo().defaultContent();
 //        }
 
-        //Проверка на наличие плашки с использованием cookie и если присутствует, то нажатие кнопки "ок"
+        //Проверка на наличие плашки о вакцинации и если присутствует, то нажатие на "крестик"
+        WebDriverWait webDriverWait = new WebDriverWait(webDriver, 10, 300);
+        WebElement frameWait = webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(COVID_FRAME_LOC)));
+//        if (frameWait.isDisplayed()) {
+//            webDriver.switchTo().frame(frameWait);
+//            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
+//            covidFrame.click();
+//            webDriver.switchTo().defaultContent();
+//        }
+
+        //Проверка на наличие плашки//iframe[@class="flocktory-widget"] с использованием cookie и если присутствует, то нажатие кнопки "ок"
         WebElement contextBarCookie = webDriver.findElement(By.xpath(CONTEXT_BAR_COOKIE_LOC));
         if (contextBarCookie.isDisplayed()) {
             WebElement quitButton = webDriver.findElement(By.xpath(QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC));
@@ -68,10 +81,53 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         WebElement sendingButton = webDriver.findElement(By.xpath(SENDING_AN_APPLICATION_BUTTON_LOC));
         sendingButton.click();
 
-        //нахождение поля для ввода фамилии
-        WebElement secondNameField = webDriver.findElement(By.xpath(SECOND_NAME_FIELD_LOC));
-        secondNameField.click();
+        //Проверка на наличие плашки о вакцинации и если присутствует, то нажатие на "крестик"
+           if (frameWait.isDisplayed()) {
+            webDriver.switchTo().frame(frameWait);
+            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
+            covidFrame.click();
+            webDriver.switchTo().defaultContent();
+        }
+
+        WebDriverWait zayavka = new WebDriverWait(webDriver, 10, 300);
+        WebElement zayavkaWait = zayavka.until(ExpectedConditions.presenceOfElementLocated(By.xpath(COVID_FRAME_LOC)));
+        if (frameWait.isDisplayed()) {
+            webDriver.switchTo().frame(frameWait);
+            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
+            covidFrame.click();
+            webDriver.switchTo().defaultContent();
+        }
+
+            //нахождение поля для ввода фамилии и дальнейшее заполнение данными
+            WebElement frameName = webDriver.findElement(By.xpath("//body[@class=\"modal-open\"]//iframe[@style=\"display: none; visibility: hidden;\"][1]"));
+            webDriver.switchTo().frame(frameName);
+            WebElement field = webDriver.findElement(By.xpath(SECOND_NAME_FIELD_LOC));
+            field.click();
+            field.sendKeys("Васильев");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("Василий");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("Васильевич");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("Москва");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("9666666667");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("qwertyqwerty");
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("30092021");
+            field.sendKeys(Keys.TAB);
+            field.sendKeys(Keys.TAB);
+
+            field.sendKeys("Ну и сервис конечно у Вас");
+            field.sendKeys(Keys.TAB);
 
 
+        }
     }
-}
