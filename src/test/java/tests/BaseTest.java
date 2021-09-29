@@ -11,27 +11,27 @@ import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
-    protected WebDriver webDriver;
-    protected WebDriverWait webDriverWait;
+    protected WebDriver driver;
+    protected WebDriverWait wait;
     private static final String AUTOMATION_PRACTICE_URL = "https://www.rgs.ru/";
 
     @BeforeEach
     public void setUp(){
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver");
-        webDriver = new ChromeDriver();
-        webDriver.manage().window().maximize();
-        webDriver.manage().timeouts().pageLoadTimeout(60,TimeUnit.SECONDS);
-        webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().pageLoadTimeout(40,TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-        webDriverWait = new WebDriverWait(webDriver,60,1000);
+        wait = new WebDriverWait(driver,30,1000);
 
-        webDriver.get(AUTOMATION_PRACTICE_URL);
+        driver.get(AUTOMATION_PRACTICE_URL);
 
     }
 
     @AfterEach
     public void tearDown(){
-        webDriver.quit();
+        driver.quit();
     }
 
 }
