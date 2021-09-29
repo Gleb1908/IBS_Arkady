@@ -1,133 +1,142 @@
 package tests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.function.BooleanSupplier;
 
 public class TestSendingAnApplicationForDMS extends BaseTest {
 
-    private static final String NAVBAR_BUTTON_MENU_LOC = "//a[@class=\"hidden-xs\" and @data-toggle=\"dropdown\"]";
-    private static final String COVID_FRAME_LOC = "//iframe[@class=\"flocktory-widget\"]";
-    private static final String QUIT_BUTTON_COVID_FRAME_LOC = "//button[@class=\"CloseButton\"]";
-    private static final String CONTEXT_BAR_COOKIE_LOC = "//div[@class=\"col-md-10half context-bar-row-content\"]";
+    private static final String NAV_BAR_BUTTON_MENU_LOC = "//a[@class=\"hidden-xs\" and @data-toggle=\"dropdown\"]";
     private static final String QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC = "//div[@class=\"btn btn-default text-uppercase\"]";
     private static final String NAVBAR_BUTTON_MENU_HEALTH_LOC = "//div[@class='h3 adv-analytics-navigation-line2-link' and ./a[contains(.,'Здоровье')]]/a[@class=\"hidden-xs\"]";
     private static final String DMS_BUTTON_LOC = "//div[@class='list-group list-group-rgs-menu collapse']/a[@class=\"list-group-item adv-analytics-navigation-line4-link\" and contains(.,'ДМС')]";
-    private static final String DMS_HEADER_LOC = "//div[@class=\"clearfix\"]/h1/text()";
     private static final String SENDING_AN_APPLICATION_BUTTON_LOC = "//div[@class=\"rgs-context-bar-content-call-to-action-buttons\"]/a[@class=\"btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button\"]";
-    private static final String SEND_BUTTON_LOC = "";
-    private static final String SECOND_NAME_FIELD_LOC = "//div[@class=\"validation-group-error-wrap\"]";
-    private static final String NAME_FIELD_LOC = "";
-    private static final String PATRONYMIC_FIELD_LOC = "";
-    private static final String REGION_FIELD_LOC = "";
-    private static final String NUMBER_FIELD_LOC = "";
-    private static final String MAIL_FIELD_LOC = "";
-    private static final String DATE_FIELD_LOC = "";
-    private static final String COMMENT_FIELD_LOC = "";
-    private static final String CHECK_BOX_AGREE_LOC = "";
-    private static final String SEND_FORM_BUTTON_LOC = "";
+    private static final String CHECK_BOX_AGREE_LOC = "//input[@class=\"checkbox\"]";
+    private static final String SEND_FORM_BUTTON_LOC = "//button[@id=\"button-m\"]";
+    private static final String ERROR_LINE_LOC = "//span[contains(text(), 'Введите адрес электронной почты')]";
 
     @Test
     public void testSelenium() {
 
-        //Проверка на наличие плашки о вакцинации и если присутствует, то нажатие на "крестик"
-//        WebDriverWait webDriverWait = new WebDriverWait(webDriver, 10, 300);
-//        WebElement frameWait = webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(COVID_FRAME_LOC)));
-//        if (frameWait.isDisplayed()) {
-//            webDriver.switchTo().frame(frameWait);
-//            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
-//            covidFrame.click();
-//            webDriver.switchTo().defaultContent();
-//        }
+        String cookiesCloseLoc = QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC;
+        WebElement cookiesBtnClose = driver.findElement(By.xpath(cookiesCloseLoc));
+        cookiesBtnClose.click();
 
-        //Проверка на наличие плашки о вакцинации и если присутствует, то нажатие на "крестик"
-        WebDriverWait webDriverWait = new WebDriverWait(webDriver, 10, 300);
-        WebElement frameWait = webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(COVID_FRAME_LOC)));
-//        if (frameWait.isDisplayed()) {
-//            webDriver.switchTo().frame(frameWait);
-//            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
-//            covidFrame.click();
-//            webDriver.switchTo().defaultContent();
-//        }
+        // выбрать пункт "меню"
+        String menuButtonLoc = NAV_BAR_BUTTON_MENU_LOC;
+        WebElement menuButton = driver.findElement(By.xpath(menuButtonLoc));
+        waitUtilElementToBeClickable(menuButton);
+        menuButton.click();
 
-        //Проверка на наличие плашки//iframe[@class="flocktory-widget"] с использованием cookie и если присутствует, то нажатие кнопки "ок"
-        WebElement contextBarCookie = webDriver.findElement(By.xpath(CONTEXT_BAR_COOKIE_LOC));
-        if (contextBarCookie.isDisplayed()) {
-            WebElement quitButton = webDriver.findElement(By.xpath(QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC));
-            quitButton.click();
-        }
+        // выбрать пункт подменю - "Здоровье"
+        String menuButtonHealthLoc = NAVBAR_BUTTON_MENU_HEALTH_LOC;
+        WebElement menuButtonHealth = driver.findElement(By.xpath(menuButtonHealthLoc));
+        waitUtilElementToBeClickable(menuButtonHealth);
+        menuButtonHealth.click();
 
-        //нахождение кнопки "меню" и клик по ней
-        WebElement navBarButtonMenu = webDriver.findElement(By.xpath(NAVBAR_BUTTON_MENU_LOC));
-        navBarButtonMenu.click();
+        // проверка открытия страницы "Здоровье"
+        Assertions.assertEquals(driver.getTitle(),
+                "Страхование здоровья",
+                "Заголовок отсутствует/не соответствует требуемому");
 
-        //нахождение кнопки "Здоровье" в выпадающем списке "меню" и клик по ней
-        WebElement navBarButtonMenuHealth = webDriver.findElement(By.xpath(NAVBAR_BUTTON_MENU_HEALTH_LOC));
-        navBarButtonMenuHealth.click();
-
-        //нахождение кнопки "Добровольное медицинское страхование (ДМС)" и клик по ней
-        WebElement dmsButton = webDriver.findElement(By.xpath(DMS_BUTTON_LOC));
+        // нажать кнопку "Добровольное медицинское страхование (ДМС)"
+        String dmsButtonLoc = DMS_BUTTON_LOC;
+        WebElement dmsButton = driver.findElement(By.xpath(dmsButtonLoc));
+        waitUtilElementToBeClickable(dmsButton);
         dmsButton.click();
 
-        //проверка соответствия заголовка страницы "ДМС — добровольное медицинское страхование"
-//        WebElement dmsHeader = webDriver.findElement(By.xpath(DMS_HEADER_LOC));
-//        String name = dmsHeader.getText();
-//        Assertions.assertEquals("ДМС — добровольное медицинское страхование", name, "Заголовок \"ДМС\" не совпадает");
+        // проверка открытия страницы "Добровольное медицинское страхование (ДМС)"
+        String pageTitleLoc = "//h1";
+        waitUtilElementToBeVisible(By.xpath(pageTitleLoc));
+        WebElement pageTitle = driver.findElement(By.xpath(pageTitleLoc));
+        Assertions.assertEquals(pageTitle.getText(),
+                "ДМС — добровольное медицинское страхование",
+                "Заголовок отсутствует/не соответствует требуемому");
 
-        //нахождение кнопки "Отправить заявку" и клик по ней
-        WebElement sendingButton = webDriver.findElement(By.xpath(SENDING_AN_APPLICATION_BUTTON_LOC));
-        sendingButton.click();
+        // нажать кнопку "Отправить заявку"
+        String sendRequestButtonLoc = SENDING_AN_APPLICATION_BUTTON_LOC;
+        WebElement sendRequestButton = driver.findElement(By.xpath(sendRequestButtonLoc));
+        waitUtilElementToBeClickable(sendRequestButton);
+        sendRequestButton.click();
 
-        //Проверка на наличие плашки о вакцинации и если присутствует, то нажатие на "крестик"
-           if (frameWait.isDisplayed()) {
-            webDriver.switchTo().frame(frameWait);
-            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
-            covidFrame.click();
-            webDriver.switchTo().defaultContent();
-        }
+        // заполнить поля данными
+        String fieldXPath = "//input[@name='%s']";
+        fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "LastName"))), "Пупкин");
+        fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "FirstName"))), "Пупок");
+        fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "MiddleName"))), "Пупокович");
 
-        WebDriverWait zayavka = new WebDriverWait(webDriver, 10, 300);
-        WebElement zayavkaWait = zayavka.until(ExpectedConditions.presenceOfElementLocated(By.xpath(COVID_FRAME_LOC)));
-        if (frameWait.isDisplayed()) {
-            webDriver.switchTo().frame(frameWait);
-            WebElement covidFrame = webDriver.findElement(By.xpath(QUIT_BUTTON_COVID_FRAME_LOC));
-            covidFrame.click();
-            webDriver.switchTo().defaultContent();
-        }
+        WebElement selectElemLoc = driver.findElement(By.xpath("//select"));
+        Select selectElem = new Select(selectElemLoc);
+        selectElem.selectByVisibleText("Москва");
 
-            //нахождение поля для ввода фамилии и дальнейшее заполнение данными
-            WebElement frameName = webDriver.findElement(By.xpath("//body[@class=\"modal-open\"]//iframe[@style=\"display: none; visibility: hidden;\"][1]"));
-            webDriver.switchTo().frame(frameName);
-            WebElement field = webDriver.findElement(By.xpath(SECOND_NAME_FIELD_LOC));
-            field.click();
-            field.sendKeys("Васильев");
-            field.sendKeys(Keys.TAB);
+        fillInputField(driver.findElement(By.xpath("//input[@name=\"ContactDate\"]")), "10.10.2021");
+        fillInputField(driver.findElement(By.xpath("//textarea[@name=\"Comment\"]")), "Хотелось бы страховочку оформить");
+        fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "Email"))), "pupokpupok");
+        fillInputField(driver.findElement(By.xpath("//input[@class=\"form-control validation-control-has-error\"]")), "(987) 654 32 10");
 
-            field.sendKeys("Василий");
-            field.sendKeys(Keys.TAB);
+        String checkBoxButtonLoc = CHECK_BOX_AGREE_LOC;
+        WebElement checkBoxButton = driver.findElement(By.xpath(checkBoxButtonLoc));
+        checkBoxButton.click();
 
-            field.sendKeys("Васильевич");
-            field.sendKeys(Keys.TAB);
+        String sendButtonLoc = SEND_FORM_BUTTON_LOC;
+        WebElement sendButton = driver.findElement(By.xpath(sendButtonLoc));
+        waitUtilElementToBeClickable(sendButton);
+        sendButton.click();
 
-            field.sendKeys("Москва");
-            field.sendKeys(Keys.TAB);
+        //проверка, что у поля "E-mail" появилась строка с ошибкой
+        String errorLineLoc = ERROR_LINE_LOC;
+        Assertions.assertTrue((BooleanSupplier) driver.findElement(By.xpath(errorLineLoc)), "Сообщение об ошибке почты отсутсвует или изменилось");
 
-            field.sendKeys("9666666667");
-            field.sendKeys(Keys.TAB);
-
-            field.sendKeys("qwertyqwerty");
-            field.sendKeys(Keys.TAB);
-
-            field.sendKeys("30092021");
-            field.sendKeys(Keys.TAB);
-            field.sendKeys(Keys.TAB);
-
-            field.sendKeys("Ну и сервис конечно у Вас");
-            field.sendKeys(Keys.TAB);
-
-
-        }
     }
+
+
+    /**
+     * Скрол до элемента на js коде
+     *
+     * @param element - веб элемент до которого нужно проскролить
+     */
+    private void scrollToElementJs(WebElement element) {
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
+        javascriptExecutor.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    /**
+     * Явное ожидание того что элемент станет кликабельный
+     *
+     * @param element - веб элемент до которого нужно проскролить
+     */
+    private void waitUtilElementToBeClickable(WebElement element) {
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    /**
+     * Явное ожидание того что элемент станет видемым
+     *
+     * @param locator - локатор до веб. элемента, который мы ожидаем найти, и который виден на странице
+     */
+    private void waitUtilElementToBeVisible(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    /**
+     * Заполнение полей определённым значений
+     *
+     * @param element - веб элемент (поле какое-то) которое планируем заполнить)
+     * @param value - значение которы мы заполняем веб элемент (поле какое-то)
+     */
+    private void fillInputField(WebElement element, String value) {
+//        scrollToElementJs(element);
+        waitUtilElementToBeClickable(element);
+        element.click();
+        element.clear();
+        element.sendKeys(value);
+        boolean checkFlag = wait.until(ExpectedConditions.attributeContains(element, "value", value));
+        Assertions.assertTrue(checkFlag, "Поле было заполнено некорректно");
+    }
+}
