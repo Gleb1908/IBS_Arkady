@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -19,7 +20,7 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
     private static final String SENDING_AN_APPLICATION_BUTTON_LOC = "//div[@class=\"rgs-context-bar-content-call-to-action-buttons\"]/a[@class=\"btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button\"]";
     private static final String CHECK_BOX_AGREE_LOC = "//input[@class=\"checkbox\"]";
     private static final String SEND_FORM_BUTTON_LOC = "//button[@id=\"button-m\"]";
-    private static final String ERROR_LINE_LOC = "//span[contains(text(), 'Введите адрес электронной почты')]";
+    private static final String ERROR_LINE_LOC = "//input[@name='Email']/..//span";
 
     @Test
     public void testSelenium() {
@@ -35,8 +36,7 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         menuButton.click();
 
         // выбрать пункт подменю - "Здоровье"
-        String menuButtonHealthLoc = NAVBAR_BUTTON_MENU_HEALTH_LOC;
-        WebElement menuButtonHealth = driver.findElement(By.xpath(menuButtonHealthLoc));
+        WebElement menuButtonHealth = driver.findElement(By.xpath(NAVBAR_BUTTON_MENU_HEALTH_LOC));
         waitUtilElementToBeClickable(menuButtonHealth);
         menuButtonHealth.click();
 
@@ -46,8 +46,7 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
                 "Заголовок отсутствует/не соответствует требуемому");
 
         // нажать кнопку "Добровольное медицинское страхование (ДМС)"
-        String dmsButtonLoc = DMS_BUTTON_LOC;
-        WebElement dmsButton = driver.findElement(By.xpath(dmsButtonLoc));
+        WebElement dmsButton = driver.findElement(By.xpath(DMS_BUTTON_LOC));
         waitUtilElementToBeClickable(dmsButton);
         dmsButton.click();
 
@@ -60,8 +59,7 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
                 "Заголовок отсутствует/не соответствует требуемому");
 
         // нажать кнопку "Отправить заявку"
-        String sendRequestButtonLoc = SENDING_AN_APPLICATION_BUTTON_LOC;
-        WebElement sendRequestButton = driver.findElement(By.xpath(sendRequestButtonLoc));
+        WebElement sendRequestButton = driver.findElement(By.xpath(SENDING_AN_APPLICATION_BUTTON_LOC));
         waitUtilElementToBeClickable(sendRequestButton);
         sendRequestButton.click();
 
@@ -75,23 +73,20 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         Select selectElem = new Select(selectElemLoc);
         selectElem.selectByVisibleText("Москва");
 
-        fillInputField(driver.findElement(By.xpath("//input[@name=\"ContactDate\"]")), "10.10.2021");
+        fillInputDate(driver.findElement(By.xpath("//input[@name=\"ContactDate\"]")), "10.10.2021");
         fillInputField(driver.findElement(By.xpath("//textarea[@name=\"Comment\"]")), "Хотелось бы страховочку оформить");
         fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "Email"))), "pupokpupok");
         fillInputField(driver.findElement(By.xpath("//input[@class=\"form-control validation-control-has-error\"]")), "(987) 654 32 10");
 
-        String checkBoxButtonLoc = CHECK_BOX_AGREE_LOC;
-        WebElement checkBoxButton = driver.findElement(By.xpath(checkBoxButtonLoc));
+        WebElement checkBoxButton = driver.findElement(By.xpath(CHECK_BOX_AGREE_LOC));
         checkBoxButton.click();
 
-        String sendButtonLoc = SEND_FORM_BUTTON_LOC;
-        WebElement sendButton = driver.findElement(By.xpath(sendButtonLoc));
+        WebElement sendButton = driver.findElement(By.xpath(SEND_FORM_BUTTON_LOC));
         waitUtilElementToBeClickable(sendButton);
         sendButton.click();
 
         //проверка, что у поля "E-mail" появилась строка с ошибкой
-        String errorLineLoc = ERROR_LINE_LOC;
-        Assertions.assertTrue((BooleanSupplier) driver.findElement(By.xpath(errorLineLoc)), "Сообщение об ошибке почты отсутсвует или изменилось");
+        Assertions.assertTrue((BooleanSupplier) driver.findElement(By.xpath(ERROR_LINE_LOC)), "Сообщение об ошибке почты отсутсвует или изменилось");
 
     }
 
@@ -136,6 +131,17 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         element.click();
         element.clear();
         element.sendKeys(value);
+        boolean checkFlag = wait.until(ExpectedConditions.attributeContains(element, "value", value));
+        Assertions.assertTrue(checkFlag, "Поле было заполнено некорректно");
+    }
+
+    private void fillInputDate(WebElement element, String value) {
+//        scrollToElementJs(element);
+        waitUtilElementToBeClickable(element);
+        element.click();
+        element.clear();
+        element.sendKeys(value);
+        element.sendKeys(Keys.ENTER);
         boolean checkFlag = wait.until(ExpectedConditions.attributeContains(element, "value", value));
         Assertions.assertTrue(checkFlag, "Поле было заполнено некорректно");
     }
