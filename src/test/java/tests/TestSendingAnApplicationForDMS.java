@@ -13,13 +13,13 @@ import java.util.function.BooleanSupplier;
 
 public class TestSendingAnApplicationForDMS extends BaseTest {
 
-    private static final String NAV_BAR_BUTTON_MENU_LOC = "//a[@class=\"hidden-xs\" and @data-toggle=\"dropdown\"]";
-    private static final String QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC = "//div[@class=\"btn btn-default text-uppercase\"]";
-    private static final String NAVBAR_BUTTON_MENU_HEALTH_LOC = "//div[@class='h3 adv-analytics-navigation-line2-link' and ./a[contains(.,'Здоровье')]]/a[@class=\"hidden-xs\"]";
-    private static final String DMS_BUTTON_LOC = "//div[@class='list-group list-group-rgs-menu collapse']/a[@class=\"list-group-item adv-analytics-navigation-line4-link\" and contains(.,'ДМС')]";
-    private static final String SENDING_AN_APPLICATION_BUTTON_LOC = "//div[@class=\"rgs-context-bar-content-call-to-action-buttons\"]/a[@class=\"btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button\"]";
-    private static final String CHECK_BOX_AGREE_LOC = "//input[@class=\"checkbox\"]";
-    private static final String SEND_FORM_BUTTON_LOC = "//button[@id=\"button-m\"]";
+    private static final String NAV_BAR_BUTTON_MENU_LOC = "//a[@class='hidden-xs' and @data-toggle='dropdown']";
+    private static final String QUIT_BUTTON_CONTEXT_BAR_COOKIE_LOC = "//div[@class='btn btn-default text-uppercase']";
+    private static final String NAVBAR_BUTTON_MENU_HEALTH_LOC = "//div[@class='h3 adv-analytics-navigation-line2-link' and ./a[contains(.,'Здоровье')]]/a[@class='hidden-xs']";
+    private static final String DMS_BUTTON_LOC = "//div[@class='list-group list-group-rgs-menu collapse']/a[@class='list-group-item adv-analytics-navigation-line4-link' and contains(.,'ДМС')]";
+    private static final String SENDING_AN_APPLICATION_BUTTON_LOC = "//div[@class='rgs-context-bar-content-call-to-action-buttons']/a[@class='btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button']";
+    private static final String CHECK_BOX_AGREE_LOC = "//input[@class='checkbox']";
+    private static final String SEND_FORM_BUTTON_LOC = "//button[@id='button-m']";
     private static final String ERROR_LINE_LOC = "//input[@name='Email']/..//span";
 
     @Test
@@ -73,10 +73,10 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         Select selectElem = new Select(selectElemLoc);
         selectElem.selectByVisibleText("Москва");
 
-        fillInputDate(driver.findElement(By.xpath("//input[@name=\"ContactDate\"]")), "10.10.2021");
-        fillInputField(driver.findElement(By.xpath("//textarea[@name=\"Comment\"]")), "Хотелось бы страховочку оформить");
+        fillInputDate(driver.findElement(By.xpath("//input[@name='ContactDate']")), "10.10.2021");
+        fillInputField(driver.findElement(By.xpath("//textarea[@name='Comment']")), "Хотелось бы страховочку оформить");
         fillInputField(driver.findElement(By.xpath(String.format(fieldXPath, "Email"))), "pupokpupok");
-        fillInputField(driver.findElement(By.xpath("//input[@class=\"form-control validation-control-has-error\"]")), "(987) 654 32 10");
+        fillInputField(driver.findElement(By.xpath("//input[@class='form-control validation-control-has-error']")), "(987) 654 32 10");
 
         WebElement checkBoxButton = driver.findElement(By.xpath(CHECK_BOX_AGREE_LOC));
         checkBoxButton.click();
@@ -86,7 +86,7 @@ public class TestSendingAnApplicationForDMS extends BaseTest {
         sendButton.click();
 
         //проверка, что у поля "E-mail" появилась строка с ошибкой
-        Assertions.assertTrue((BooleanSupplier) driver.findElement(By.xpath(ERROR_LINE_LOC)), "Сообщение об ошибке почты отсутсвует или изменилось");
+        Assertions.assertTrue((BooleanSupplier) driver.findElement(By.xpath(ERROR_LINE_LOC)), "Сообщение об ошибке почты отсутствует или изменилось");
 
     }
 
