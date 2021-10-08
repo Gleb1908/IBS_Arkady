@@ -5,9 +5,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import products.Guarantee;
 import products.Product;
+import products.Products;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static utils.PropConst.IMPLICITLY_WAIT;
 
 /**
  * Реализация страницы продукта
@@ -35,11 +40,15 @@ public class ProductPage extends BasePage {
         double productPrice = Double.parseDouble(this.productPrice.getText().split("₽")[0].replaceAll("\\s+", ""));
         boolean productGuaranty;
         try {
+            driverManager.getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             this.productGuaranty.isDisplayed();
             productGuaranty = true;
         } catch (NoSuchElementException ex) {
             productGuaranty = false;
+        } finally {
+            driverManager.getDriver().manage().timeouts().implicitlyWait(Integer.parseInt(props.getProperty(IMPLICITLY_WAIT)), TimeUnit.SECONDS);
         }
+
         products.add(new Product(searchedName, productPrice, productGuaranty, products.size()));
         return this;
     }
@@ -49,15 +58,15 @@ public class ProductPage extends BasePage {
      * @param guar - сколько месяцев гарантии
      * @return ProductPage
      */
-    public ProductPage addProductGuaranty(String guar) {
+    public ProductPage addProductGuaranty(Guarantee guar) {
 
         Assertions.assertTrue(waitUtilElementToBeClickable(productGuaranty), "Поле гарантии не кликабельно");
         productGuaranty.click();
         for (WebElement element : listGuaranty) {
             Assertions.assertTrue(waitUtilElementToBeVisible(element), "Элемент не загрузился");
-            if (element.findElement(By.xpath("//span[contains(@class,'warranty__period') and text()='" + guar + "']")) != null) {
+            if (element.findElement(By.xpath("//span[contains(@class,'warranty__period') and text()='" + guar.getTitle() + "']")) != null) {
                 try {
-                    element.findElement(By.xpath("//span[contains(@class,'warranty__period') and text()='" + guar + "']")).click();
+                    element.findElement(By.xpath("//span[contains(@class,'warranty__period') and text()='" + guar.getTitle() + "']")).click();
                     return pageManager.getProductPage();
                 } catch (NoSuchElementException ignored) {
                 }
@@ -74,6 +83,7 @@ public class ProductPage extends BasePage {
     public HomePage addToShoppingBasket() {
         Assertions.assertTrue(waitUtilElementToBeClickable(buyButton), "Кнопка добавить в корзину не кликабельна");
         buyButton.click();
+        // проверка на работу кнопки добавления
         return pageManager.getHomePage();
     }
 

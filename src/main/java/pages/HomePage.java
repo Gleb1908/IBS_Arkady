@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import products.Products;
 
 
 /**
@@ -19,15 +20,15 @@ public class HomePage extends BasePage{
 
     /**
      * Поиск товара в строке поиска
-     * @param name - имя товара
+     * @param product - имя товара
      * @return ResultsPage
      */
-    public SearchingResultsPage searchProductInSearchLine(String name) {
+    public SearchingResultsPage searchProductInSearchLine(Products product) {
         Assertions.assertTrue(waitUtilElementToBeClickable(searchLine), "Поисковая строка не кликабельна");
         searchLine.click();
         searchLine.clear();
-        searchLine.sendKeys(name);
-        Assertions.assertEquals(searchLine.getAttribute("value"),name,"Введенный текст не совпадает");
+        searchLine.sendKeys(product.getTitle());
+        Assertions.assertEquals(searchLine.getAttribute("value"),product.getTitle(),"Введенный текст не совпадает");
         searchLine.sendKeys(Keys.ENTER);
         return pageManager.getSearchingResultsPage();
     }

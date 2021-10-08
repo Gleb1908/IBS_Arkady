@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import products.Products;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ public class SearchingResultsPage extends BasePage {
     @FindBy(xpath = "//div[@data-id = 'product']")
     private List<WebElement> listProducts;
 
-    public ProductPage searchProductOnSearchingResultPage(String name) {
-        pageManager.getSearchingResultsPage().checkProductAvailable(name);
-        pageManager.getProductPage().saveProductInformation(name);
+    public ProductPage searchProductOnSearchingResultPage(Products product) {
+        checkProductAvailable(product.getTitle());
+        pageManager.getProductPage().saveProductInformation(product.getTitle());
         return pageManager.getProductPage();
     }
 
@@ -27,7 +28,7 @@ public class SearchingResultsPage extends BasePage {
      *
      * @return ProductPage
      */
-    public ProductPage checkProductAvailable(String name) {
+    private ProductPage checkProductAvailable(String name) {
         for (WebElement element : listProducts) {
             Assertions.assertTrue(waitUtilElementToBeVisible(element),"Элемент не загрузился");
             if (element.findElement(By.xpath("//a[contains(@class,'product__name') and contains(span,'" + name + "')]")).getSize()!=null) {

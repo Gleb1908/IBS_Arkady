@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import products.Product;
+import products.Products;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ShoppingBasketPage extends BasePage {
         double productsSum = 0;
         for (Product product : products)
             productsSum += product.getPrice() * product.getQuantity();
-        Assertions.assertFalse(shoppingBasketSum != productsSum || upperShoppingBasketSum != productsSum, "Сумма в корзине не соответствует сумме покупок");
+        Assertions.assertTrue(shoppingBasketSum == productsSum && upperShoppingBasketSum == productsSum, "Сумма в корзине не соответствует сумме покупок");
         return this;
     }
 
@@ -61,7 +62,7 @@ public class ShoppingBasketPage extends BasePage {
                         WebElement deleteButton = element.findElement(By.xpath("//div[@class='cart-items__content-container']//a[contains(text(),'" + name + "')]/../../../../..//i[@class='count-buttons__icon-minus']"));
                         Assertions.assertTrue(waitUtilElementToBeClickable(deleteButton), "Кнопка удалить не активна");
                         deleteButton.click();
-                        Assertions.assertFalse(waitUtilElementNotToBeVisible(element), "Элемент не удален");
+                        Assertions.assertTrue(waitUtilElementNotToBeVisible(element), "Элемент не удален");
                         products.remove(product);
                         break;
                     }
@@ -76,22 +77,23 @@ public class ShoppingBasketPage extends BasePage {
     /**
      * Добавление существующего товара
      *
-     * @param name - имя заданное в поиске
+     * @param product - имя заданное в поиске
      * @return CartPage
      */
-    public ShoppingBasketPage add(String name) {
+    public ShoppingBasketPage add(Products product) {
 
         for (WebElement element : listProductsNames) {
-            if (element.getText().contains(name)) {
-                WebElement addButton = element.findElement(By.xpath("//div[@class='cart-items__content-container']//a[contains(text(),'" + name + "')]/../../../../..//i[@class='count-buttons__icon-plus']"));
+            if (element.getText().contains(product.getTitle())) {
+                WebElement addButton = element.findElement(By.xpath("//div[@class='cart-items__content-container']//a[contains(text(),'" + product + "')]/../../../../..//i[@class='count-buttons__icon-plus']"));
                 Assertions.assertTrue(waitUtilElementToBeClickable(addButton), "Кнопка добавить не активна");
                 addButton.click();
+                // проверка на увеличение значение в иконке карзины
                 break;
             }
         }
-        for (Product product : products) {
-            if (product.getSearchedName().equals(name)) {
-                product.setQuantity(product.getQuantity() + 1);
+        for (Product itemProduct : products) {
+            if (itemProduct.getSearchedName().equals(product.getTitle())) {
+                itemProduct.setQuantity(itemProduct.getQuantity() + 1);
                 break;
             }
         }

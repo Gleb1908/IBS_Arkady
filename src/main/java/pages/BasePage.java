@@ -50,7 +50,7 @@ public class BasePage {
      *
      * @see TestPropManager#getTestPropManager()
      */
-    private final TestPropManager props = TestPropManager.getTestPropManager();
+    protected final TestPropManager props = TestPropManager.getTestPropManager();
 
     /**
      * List всех добавленных продуктов
@@ -128,8 +128,7 @@ public class BasePage {
      */
     protected boolean waitUtilElementNotToBeVisible(WebElement element) {
         try {
-            wait.until(ExpectedConditions.invisibilityOf(element));
-            return true;
+            return wait.until(ExpectedConditions.not(ExpectedConditions.invisibilityOf(element)));
         } catch (TimeoutException ex) {
             return false;
         }

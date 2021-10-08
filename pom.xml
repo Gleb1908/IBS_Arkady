@@ -23,9 +23,8 @@
 
         <!-- Dependencies versions -->
         <selenium-java.version>3.141.59</selenium-java.version>
-        <junit-jupiter-engine.version>5.7.0</junit-jupiter-engine.version>
         <junit-platform-launcher.version>1.7.0</junit-platform-launcher.version>
-        <junit-jupiter-params.version>5.7.0</junit-jupiter-params.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
 
     </properties>
 
@@ -41,9 +40,8 @@
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit-jupiter-params.version}</version>
-            <scope>test</scope>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
@@ -51,22 +49,9 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <version>${junit-platform-launcher.version}</version>
-            <scope>test,main</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.0</version>
-            <scope>compile</scope>
-        </dependency>
+
 
     </dependencies>
 
